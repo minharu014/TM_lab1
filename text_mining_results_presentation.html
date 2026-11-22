@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>From Reviews to Results — Group 6</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f4f7f6;
+      --panel: #ffffff;
+      --text: #102f46;
+      --muted: #506b7e;
+      --accent: #28547b;
+      --accent2: #365e80;
+      --line: #cbd9df;
+      --marine: #0b3550;
+      --soft-blue: #e9eef4;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-snap-type: y mandatory;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 18px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+    }
+
+    .slide {
+      min-height: 100svh;
+      padding: clamp(2rem, 6vw, 5rem) clamp(1.25rem, 9vw, 8rem) 6rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      scroll-snap-align: start;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .inner { width: min(100%, 980px); margin: 0 auto; position: relative; }
+    .eyebrow { color: var(--accent); text-transform: uppercase; letter-spacing: .14em; font-size: .78rem; font-weight: 750; }
+    h1, h2 { line-height: 1.08; letter-spacing: -.035em; margin: .55rem 0 1rem; }
+    h1 { font-size: clamp(3rem, 8vw, 6rem); max-width: 850px; }
+    h2 { font-size: clamp(2.2rem, 5.5vw, 4rem); }
+    p { max-width: 760px; color: var(--muted); margin: .5rem 0 1rem; }
+    .lead { font-size: clamp(1.15rem, 2.3vw, 1.45rem); }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+    .card { background: var(--panel); border: 1px solid var(--line); padding: 1.2rem; box-shadow: 0 8px 24px #0b35500b; }
+    .number { display: block; color: var(--accent); font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 800; line-height: 1.1; }
+    .label { color: var(--muted); font-size: .95rem; }
+    .flow { display: flex; align-items: center; gap: .7rem; flex-wrap: wrap; margin: 1.6rem 0; }
+    .chip { background: #fff; border: 1px solid var(--line); padding: .7rem .95rem; color: var(--text); box-shadow: 0 5px 16px #0b35500b; }
+    .arrow { color: var(--accent); font-size: 1.35rem; }
+    code { color: #155878; font: .9em ui-monospace, SFMono-Regular, Consolas, monospace; }
+    .example { display: flex; flex-wrap: wrap; gap: .65rem; margin: 1.4rem 0; }
+    .word { background: var(--panel); border: 1px solid var(--line); padding: .55rem .75rem; min-width: 74px; text-align: center; box-shadow: 0 5px 16px #0b35500b; }
+    .word strong { display: block; font-size: 1.05rem; }
+    .word small { color: var(--accent2); font-weight: 700; }
+    .note { font-size: .9rem; color: #61798a; }
+    .slide--hero, .slide--closing { background-color: var(--marine); background-image: none; color: #f5f8f6; }
+    .slide--hero .eyebrow, .slide--closing .eyebrow { color: #c3d5e8; }
+    .slide--hero p, .slide--closing p { color: #d7e5e9; }
+    .team-names { font-weight: 650; letter-spacing: .04em; }
+    .hero-layout { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(180px, .7fr); gap: 2rem; align-items: center; }
+    .hero-stat { border: 1px solid #ffffff55; padding: 1.5rem; background: #1c3e5a; text-align: center; }
+    .hero-stat strong { display: block; color: #d3e2f1; font-size: clamp(4rem, 10vw, 7rem); line-height: 1; }
+    .slide--sample { background: #fff; }
+    .slide--length { background: var(--soft-blue); }
+    .slide--sample .card, .slide--length .card { background: #fff; }
+    .slide--token .token-layout { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(200px, .85fr); gap: 2rem; align-items: center; }
+    .big-result { border-left: 1px solid #b6cbd3; padding-left: 2rem; }
+    .big-result .number { font-size: clamp(3.5rem, 8vw, 6rem); }
+    .results-table { width: 100%; border-collapse: collapse; margin: 1.2rem 0; background: #fff; border: 1px solid var(--line); overflow: hidden; box-shadow: 0 8px 24px #0b35500b; }
+    .results-table th, .results-table td { text-align: left; padding: .8rem 1rem; border-bottom: 1px solid #dce6e9; }
+    .results-table thead { background: var(--marine); color: #f5f8f6; }
+    .results-table tbody tr:nth-child(even) { background: #eef2f6; }
+    .results-table tbody tr:last-child td { border-bottom: 0; }
+    .results-table td:last-child { color: #155878; font-weight: 750; font-variant-numeric: tabular-nums; }
+    .pos-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(260px, .9fr); gap: 2rem; align-items: start; }
+    .pos-example { padding: 1rem; background: #e8eef4; }
+    .process { display: grid; grid-template-columns: repeat(4, 1fr); gap: .7rem; margin: 1.8rem 0; }
+    .process div { min-height: 112px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; background: #1c3e5a; border: 1px solid #ffffff45; padding: .8rem; }
+    .process b { color: #d3e2f1; }
+    .progress { position: fixed; z-index: 2; top: 0; left: 0; height: 4px; background: #7894b2; width: 0; transition: width .2s ease; }
+    .output-block { margin: 1.2rem 0; padding: 1rem 1.2rem; background: var(--marine); color: #f4f7f6; font: 1rem/1.8 ui-monospace, SFMono-Regular, Consolas, monospace; }
+    .count-tables { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+    .count-tables .results-table { margin: .2rem 0; font-size: .82rem; }
+    .count-tables .results-table th, .count-tables .results-table td { padding: .32rem .55rem; line-height: 1.2; }
+    .output-image { display: block; width: 100%; max-height: min(62vh, 560px); object-fit: contain; object-position: left center; margin: 1rem auto; border: 1px solid var(--line); background: #111; }
+    .code-layout { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(220px, .7fr); gap: 2rem; align-items: center; }
+    .code-layout img { display: block; width: 100%; height: auto; max-height: 58vh; object-fit: contain; object-position: left center; border: 1px solid var(--line); }
+    .code-layout ul { margin: 0; padding-left: 1.2rem; color: var(--muted); }
+    .code-layout li { margin: .6rem 0; }
+    .image-caption { font-size: .9rem; color: var(--muted); }
+    @media (max-width: 680px) {
+      .hero-layout, .slide--token .token-layout, .pos-layout, .code-layout { grid-template-columns: 1fr; }
+      .hero-stat { display: none; }
+      .big-result { border-left: 0; border-top: 1px solid #b6cbd3; padding: 1rem 0 0; }
+      .process { grid-template-columns: repeat(2, 1fr); }
+      .count-tables { grid-template-columns: 1fr 1fr; gap: .4rem; }
+      .results-table th, .results-table td { padding: .65rem .55rem; font-size: .9rem; }
+      .slide { padding-bottom: 7rem; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="progress" id="progress"></div>
+  <main>
+    <section class="slide slide--hero">
+      <div class="inner">
+        <div class="hero-layout">
+          <div>
+            <div class="eyebrow">Group 6 · Text mining · Results</div>
+            <h1>From movie reviews to data</h1>
+            <p class="team-names">Haru · Marcus · Sashe</p>
+            <p class="lead">What did spaCy find when we processed the first 20 IMDB reviews?</p>
+          </div>
+          <div class="hero-stat" aria-label="20 reviews analyzed"><strong>20</strong>reviews analyzed</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide slide--sample">
+      <div class="inner">
+        <div class="eyebrow">01 · The sample</div>
+        <h2>What went in?</h2>
+        <p>We used the first 20 rows of the IMDB CSV. Here is the sample at a glance:</p>
+        <table class="results-table">
+          <thead><tr><th>Measure</th><th>Result</th><th>What it tells us</th></tr></thead>
+          <tbody>
+            <tr><td>Rows processed</td><td>20</td><td>Small sample for the lab</td></tr>
+            <tr><td>Sentiment labels</td><td>10 positive · 10 negative</td><td>Even split in these rows</td></tr>
+            <tr><td>Full dataset</td><td>50,000 reviews</td><td>Much larger than our sample</td></tr>
+          </tbody>
+        </table>
+        <p>spaCy’s <code>nlp.pipe</code> processed the reviews together.</p>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="inner">
+        <div class="eyebrow">02 · Loading the dataset</div>
+        <h2>Getting the reviews</h2>
+        <div class="code-layout">
+          <img src="screenshot/1.png" alt="Notebook code downloading the IMDB dataset and loading its CSV with pandas">
+          <ul>
+            <li><strong>KaggleHub</strong> downloads the IMDB dataset.</li>
+            <li><strong>pandas</strong> reads the CSV into a table.</li>
+            <li><code>shape</code> and <code>head()</code> let us check the data.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide slide--token">
+      <div class="inner">
+        <div class="eyebrow">03 · Tokenization</div>
+        <h2>A review becomes pieces</h2>
+        <div class="token-layout">
+          <div>
+            <p class="lead">Example from the first review:</p>
+            <div class="flow" aria-label="Tokenization example">
+              <span class="chip">“One of the other reviewers…”</span>
+              <span class="arrow">→</span>
+              <span class="chip"><code>One</code></span>
+              <span class="chip"><code>of</code></span>
+              <span class="chip"><code>the</code></span>
+              <span class="chip"><code>other</code></span>
+              <span class="chip"><code>reviewers</code></span>
+              <span class="chip">…</span>
+            </div>
+          </div>
+          <div class="big-result">
+            <span class="number">3,708</span>
+            <span class="label">tokens counted across 20 reviews</span>
+            <p class="note">Review 1 alone produced 359 tokens. Punctuation counts as tokens too.</p>
+          </div>
+        </div>
+        <div class="output-block">
+          Number of reviews processed: 20<br>
+          Token count for review 1: 359
+        </div>
+        <p class="note">These are the key summary lines printed by the notebook.</p>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="inner">
+        <div class="eyebrow">04 · Processing the reviews</div>
+        <h2>How spaCy produces the results</h2>
+        <div class="code-layout">
+          <img src="screenshot/2.png" alt="Notebook code selecting 20 reviews, running spaCy, and collecting tokens and part-of-speech tags">
+          <ul>
+            <li><code>iloc[:20]</code> selects the first 20 reviews.</li>
+            <li><code>nlp.pipe</code> processes them with the English model.</li>
+            <li>Each token keeps its text, general PoS label, and detailed tag.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide slide--counts">
+      <div class="inner">
+        <div class="eyebrow">05 · Token count results</div>
+        <h2>Tokens in each review</h2>
+        <p>These are the token counts produced for all 20 reviews.</p>
+        <div class="count-tables">
+          <table class="results-table">
+            <thead><tr><th>Index</th><th>Review number</th><th>Token count</th></tr></thead>
+            <tbody>
+              <tr><td>0</td><td>1</td><td>359</td></tr>
+              <tr><td>1</td><td>2</td><td>191</td></tr>
+              <tr><td>2</td><td>3</td><td>193</td></tr>
+              <tr><td>3</td><td>4</td><td>154</td></tr>
+              <tr><td>4</td><td>5</td><td>257</td></tr>
+              <tr><td>5</td><td>6</td><td>149</td></tr>
+              <tr><td>6</td><td>7</td><td>171</td></tr>
+              <tr><td>7</td><td>8</td><td>200</td></tr>
+              <tr><td>8</td><td>9</td><td>153</td></tr>
+              <tr><td>9</td><td>10</td><td>38</td></tr>
+            </tbody>
+          </table>
+          <table class="results-table">
+            <thead><tr><th>Index</th><th>Review number</th><th>Token count</th></tr></thead>
+            <tbody>
+              <tr><td>10</td><td>11</td><td>104</td></tr>
+              <tr><td>11</td><td>12</td><td>199</td></tr>
+              <tr><td>12</td><td>13</td><td>461</td></tr>
+              <tr><td>13</td><td>14</td><td>130</td></tr>
+              <tr><td>14</td><td>15</td><td>57</td></tr>
+              <tr><td>15</td><td>16</td><td>165</td></tr>
+              <tr><td>16</td><td>17</td><td>158</td></tr>
+              <tr><td>17</td><td>18</td><td>281</td></tr>
+              <tr><td>18</td><td>19</td><td>137</td></tr>
+              <tr><td>19</td><td>20</td><td>152</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="inner">
+        <div class="eyebrow">06 · Displaying the results</div>
+        <h2>From processed text to tables</h2>
+        <div class="code-layout">
+          <img src="screenshot/3.png" alt="Notebook code creating the review token-count table and printing the first 20 tagged tokens of each review">
+          <ul>
+            <li>A pandas table shows each review number and token count.</li>
+            <li>The loop prints the first 20 tagged tokens per review.</li>
+            <li>The full tagged reviews remain in <code>pos_tagged_reviews</code>.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide slide--length">
+      <div class="inner">
+        <div class="eyebrow">07 · Review lengths</div>
+        <h2>A quick range check</h2>
+        <div class="pos-layout">
+          <div>
+            <p class="lead">Reviews are not all the same length.</p>
+            <p>The first review, at 359 tokens, is much longer than the shortest one. Longer reviews give the computer more text to analyze.</p>
+          </div>
+          <table class="results-table">
+            <thead><tr><th>Length measure</th><th>Tokens</th></tr></thead>
+            <tbody>
+              <tr><td>Shortest review</td><td>38</td></tr>
+              <tr><td>Average review</td><td>185.4</td></tr>
+              <tr><td>Review 1</td><td>359</td></tr>
+              <tr><td>Longest review</td><td>461</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide slide--pos">
+      <div class="inner">
+        <div class="eyebrow">08 · Part-of-speech tagging</div>
+        <h2>Words get grammar labels</h2>
+        <div class="pos-layout">
+          <div class="pos-example">
+            <p><strong>Example from review 1</strong></p>
+            <div class="example" aria-label="Part-of-speech example">
+              <span class="word"><strong>One</strong><small>NUM</small></span>
+              <span class="word"><strong>of</strong><small>ADP</small></span>
+              <span class="word"><strong>the</strong><small>DET</small></span>
+              <span class="word"><strong>other</strong><small>ADJ</small></span>
+              <span class="word"><strong>reviewers</strong><small>NOUN</small></span>
+              <span class="word"><strong>mentioned</strong><small>VERB</small></span>
+            </div>
+          </div>
+          <div>
+            <p><strong>Most frequent labels across all 20 reviews</strong></p>
+            <table class="results-table">
+              <thead><tr><th>Label</th><th>Count</th></tr></thead>
+              <tbody>
+                <tr><td>NOUN</td><td>608</td></tr>
+                <tr><td>PUNCT</td><td>409</td></tr>
+                <tr><td>VERB</td><td>366</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <p class="note">Counts include all spaCy tokens from all 20 reviews.</p>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="inner">
+        <div class="eyebrow">09 · Example notebook output</div>
+        <h2>What the word tags look like</h2>
+        <p>This screenshot shows the words with their spaCy part-of-speech labels and detailed tags.</p>
+        <img class="output-image" src="screenshot/image.png" alt="Notebook output showing words in IMDB reviews with part-of-speech labels and detailed tags">
+        <p class="image-caption">The tuples show each token, its general part-of-speech label, and its detailed tag.</p>
+      </div>
+    </section>
+
+    <section class="slide slide--closing">
+      <div class="inner">
+        <div class="eyebrow">10 · What we learned</div>
+        <h2>Useful first step, not the final answer</h2>
+        <div class="process">
+          <div><b>01 · Input</b><span>Review text</span></div>
+          <div><b>02 · Split</b><span>Tokens</span></div>
+          <div><b>03 · Label</b><span>Grammar tags</span></div>
+          <div><b>04 · Next</b><span>Further analysis</span></div>
+        </div>
+        <p class="lead">This prepares text for analysis. It does <strong>not</strong> by itself understand the review or predict its sentiment.</p>
+        <p>A next experiment could compare word or grammar patterns in positive and negative reviews.</p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const slides = [...document.querySelectorAll(".slide")];
+    const progress = document.getElementById("progress");
+    let active = 0;
+
+    function goTo(index) {
+      active = Math.max(0, Math.min(slides.length - 1, index));
+      slides[active].scrollIntoView({ behavior: "smooth" });
+      update();
+    }
+
+    function update() {
+      const closest = slides.reduce((best, slide, index) =>
+        Math.abs(slide.getBoundingClientRect().top) < Math.abs(slides[best].getBoundingClientRect().top) ? index : best, 0);
+      active = closest;
+      progress.style.width = `${((active + 1) / slides.length) * 100}%`;
+    }
+
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("keydown", event => {
+      if (event.altKey || event.ctrlKey || event.metaKey) return;
+      if ([" ", "ArrowDown", "PageDown"].includes(event.key)) {
+        event.preventDefault();
+        goTo(active + 1);
+      } else if (["ArrowUp", "PageUp"].includes(event.key)) {
+        event.preventDefault();
+        goTo(active - 1);
+      } else if (event.key === "Home") {
+        goTo(0);
+      } else if (event.key === "End") {
+        goTo(slides.length - 1);
+      }
+    });
+    update();
+  </script>
+</body>
+</html>
