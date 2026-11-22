@@ -98,9 +98,15 @@
     .code-layout img { display: block; width: 100%; height: auto; max-height: 58vh; object-fit: contain; object-position: left center; border: 1px solid var(--line); }
     .code-layout ul { margin: 0; padding-left: 1.2rem; color: var(--muted); }
     .code-layout li { margin: .6rem 0; }
+    .tag-code-layout { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; align-items: start; }
+    .tag-code-layout img { display: block; width: 100%; max-height: 48vh; object-fit: contain; object-position: top left; border: 1px solid var(--line); background: #111; }
+    .ner-layout { display: grid; grid-template-columns: minmax(180px, .7fr) minmax(300px, 1.3fr); gap: 2rem; align-items: start; }
+    .alternative-list { margin: 0; padding-left: 1.2rem; }
+    .alternative-list li { margin: .35rem 0; }
     .image-caption { font-size: .9rem; color: var(--muted); }
     @media (max-width: 680px) {
       .hero-layout, .slide--token .token-layout, .pos-layout, .code-layout { grid-template-columns: 1fr; }
+      .tag-code-layout, .ner-layout { grid-template-columns: 1fr; }
       .hero-stat { display: none; }
       .big-result { border-left: 0; border-top: 1px solid #b6cbd3; padding: 1rem 0 0; }
       .process { grid-template-columns: repeat(2, 1fr); }
@@ -191,13 +197,27 @@
           Number of reviews processed: 20<br>
           Token count for review 1: 359
         </div>
-        <p class="note">These are the key summary lines printed by the notebook.</p>
       </div>
     </section>
 
+        <section class="slide slide--counts">
+      <div class="inner">
+        <div class="eyebrow">04 · Token count results</div>
+        <h2>Review length overview</h2>
+        <p class="lead">The 20 reviews vary considerably in length.</p>
+        <div class="grid">
+          <div class="card"><span class="number">38</span><span class="label">shortest review</span></div>
+          <div class="card"><span class="number">185.4</span><span class="label">average tokens</span></div>
+          <div class="card"><span class="number">461</span><span class="label">longest review</span></div>
+        </div>
+      </div>
+    </section>
+
+
+
     <section class="slide">
       <div class="inner">
-        <div class="eyebrow">04 · Processing the reviews</div>
+        <div class="eyebrow">05 · Processing the reviews</div>
         <h2>How spaCy produces the results</h2>
         <div class="code-layout">
           <img src="screenshot/2.png" alt="Notebook code selecting 20 reviews, running spaCy, and collecting tokens and part-of-speech tags">
@@ -210,45 +230,7 @@
       </div>
     </section>
 
-    <section class="slide slide--counts">
-      <div class="inner">
-        <div class="eyebrow">05 · Token count results</div>
-        <h2>Tokens in each review</h2>
-        <p>These are the token counts produced for all 20 reviews.</p>
-        <div class="count-tables">
-          <table class="results-table">
-            <thead><tr><th>Index</th><th>Review number</th><th>Token count</th></tr></thead>
-            <tbody>
-              <tr><td>0</td><td>1</td><td>359</td></tr>
-              <tr><td>1</td><td>2</td><td>191</td></tr>
-              <tr><td>2</td><td>3</td><td>193</td></tr>
-              <tr><td>3</td><td>4</td><td>154</td></tr>
-              <tr><td>4</td><td>5</td><td>257</td></tr>
-              <tr><td>5</td><td>6</td><td>149</td></tr>
-              <tr><td>6</td><td>7</td><td>171</td></tr>
-              <tr><td>7</td><td>8</td><td>200</td></tr>
-              <tr><td>8</td><td>9</td><td>153</td></tr>
-              <tr><td>9</td><td>10</td><td>38</td></tr>
-            </tbody>
-          </table>
-          <table class="results-table">
-            <thead><tr><th>Index</th><th>Review number</th><th>Token count</th></tr></thead>
-            <tbody>
-              <tr><td>10</td><td>11</td><td>104</td></tr>
-              <tr><td>11</td><td>12</td><td>199</td></tr>
-              <tr><td>12</td><td>13</td><td>461</td></tr>
-              <tr><td>13</td><td>14</td><td>130</td></tr>
-              <tr><td>14</td><td>15</td><td>57</td></tr>
-              <tr><td>15</td><td>16</td><td>165</td></tr>
-              <tr><td>16</td><td>17</td><td>158</td></tr>
-              <tr><td>17</td><td>18</td><td>281</td></tr>
-              <tr><td>18</td><td>19</td><td>137</td></tr>
-              <tr><td>19</td><td>20</td><td>152</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
+
 
     <section class="slide">
       <div class="inner">
@@ -265,31 +247,9 @@
       </div>
     </section>
 
-    <section class="slide slide--length">
-      <div class="inner">
-        <div class="eyebrow">07 · Review lengths</div>
-        <h2>A quick range check</h2>
-        <div class="pos-layout">
-          <div>
-            <p class="lead">Reviews are not all the same length.</p>
-            <p>The first review, at 359 tokens, is much longer than the shortest one. Longer reviews give the computer more text to analyze.</p>
-          </div>
-          <table class="results-table">
-            <thead><tr><th>Length measure</th><th>Tokens</th></tr></thead>
-            <tbody>
-              <tr><td>Shortest review</td><td>38</td></tr>
-              <tr><td>Average review</td><td>185.4</td></tr>
-              <tr><td>Review 1</td><td>359</td></tr>
-              <tr><td>Longest review</td><td>461</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
     <section class="slide slide--pos">
       <div class="inner">
-        <div class="eyebrow">08 · Part-of-speech tagging</div>
+        <div class="eyebrow">07 · Part-of-speech tagging</div>
         <h2>Words get grammar labels</h2>
         <div class="pos-layout">
           <div class="pos-example">
@@ -321,26 +281,76 @@
 
     <section class="slide">
       <div class="inner">
-        <div class="eyebrow">09 · Example notebook output</div>
+        <div class="eyebrow">08 · POS tag sets</div>
+        <h2>Counting Universal and Penn tags</h2>
+        <div class="tag-code-layout">
+          <div>
+            <img src="screenshot/5 universal.png" alt="Python code counting Universal POS tags with collections.Counter and pandas">
+            <p class="image-caption">Universal POS frequency code</p>
+          </div>
+          <div>
+            <img src="screenshot/6 penn.png" alt="Python code counting Penn POS tags with collections.Counter and pandas">
+            <p class="image-caption">Penn POS frequency code</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="inner">
+        <div class="eyebrow">09 · POS frequency results</div>
+        <h2>Universal and Penn tag frequencies</h2>
+        <img class="output-image" src="screenshot/4.png" alt="Table comparing the most frequent Universal POS tags and Penn POS tags">
+        <p class="image-caption">Both tag sets classify the same review tokens, but at different levels of detail.</p>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="inner">
+        <div class="eyebrow">10 · Example notebook output</div>
         <h2>What the word tags look like</h2>
         <p>This screenshot shows the words with their spaCy part-of-speech labels and detailed tags.</p>
         <img class="output-image" src="screenshot/image.png" alt="Notebook output showing words in IMDB reviews with part-of-speech labels and detailed tags">
-        <p class="image-caption">The tuples show each token, its general part-of-speech label, and its detailed tag.</p>
+        <p class="image-caption">
+NUM (Numeral - one,1,20) and <br>
+CD (Cardinal number, one, 1) <br>
+and not ordinal number (1st, 2nd)</p>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="inner">
+        <div class="eyebrow">11 · Question 3</div>
+        <h2>What other challenges can this solution be adapted for?</h2>
+        <div class="ner-layout">
+          <div>
+            <ul class="alternative-list">
+              <li><strong>Alternatives uses for POS tagging:</strong></li>
+              <li><strong>Named Entity Recognition (NER)</strong></li>
+              <li>Identifying/categorising entities in text.</li>
+            </ul>
+          </div>
+          <table class="results-table">
+            <thead><tr><th>Entity</th><th>Category</th></tr></thead>
+            <tbody>
+              <tr><td>Tom Hanks</td><td>PERSON</td></tr>
+              <tr><td>New York</td><td>GPE</td></tr>
+              <tr><td>2020</td><td>DATE</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </section>
 
     <section class="slide slide--closing">
       <div class="inner">
-        <div class="eyebrow">10 · What we learned</div>
-        <h2>Useful first step, not the final answer</h2>
+        <h2>Thank you</h2>
         <div class="process">
           <div><b>01 · Input</b><span>Review text</span></div>
           <div><b>02 · Split</b><span>Tokens</span></div>
           <div><b>03 · Label</b><span>Grammar tags</span></div>
           <div><b>04 · Next</b><span>Further analysis</span></div>
         </div>
-        <p class="lead">This prepares text for analysis. It does <strong>not</strong> by itself understand the review or predict its sentiment.</p>
-        <p>A next experiment could compare word or grammar patterns in positive and negative reviews.</p>
       </div>
     </section>
   </main>

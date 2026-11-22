@@ -2,48 +2,67 @@
 
 Team: Haru, Marcus, and Sashe.
 
-Speaking script for the eleven-slide deck; target length is about four minutes.
+Speaking script for the presentation; target length is about four minutes.
 
 ## Slide 1 — Group 6: From movie reviews to data
 
-Hi, we are Group 6: Haru, Marcus, and Sashe. We used spaCy to split the first 20 IMDB reviews into tokens and label their parts of speech. We will show the code briefly and focus on what it produced.
+Hi, we are Group 6: Haru, Marcus, and Sashe. We used spaCy to tokenize the first 20 IMDB reviews and label their parts of speech.
 
 ## Slide 2 — 01 · The sample: What went in?
 
-The full dataset contains 50,000 reviews. We selected the first 20 rows; ten have positive labels and ten have negative labels. Those sentiment labels already exist in the dataset. Our task is to organize the text, not predict the sentiment.
+The full dataset has 50,000 reviews. We used the first 20: ten are labelled positive and ten are labelled negative.
 
 ## Slide 3 — 02 · Loading the dataset: Getting the reviews
 
-This screenshot shows how we load the data. KaggleHub downloads the dataset, and the code finds its CSV file. pandas reads the CSV into a table called `imdb`. Finally, `shape` shows the table dimensions and `head()` displays the first rows so we can inspect what we loaded.
+We downloaded the dataset with KaggleHub and CSV file. Then pandas loaded it into a table called `imdb`, so we could inspect the shape and the first few rows.
 
 ## Slide 4 — 03 · Tokenization: A review becomes pieces
 
-Tokenization breaks text into pieces. For example, “One of the other reviewers” becomes five separate tokens. The notebook reports 20 reviews processed and 359 tokens in review one. Across all 20 reviews, there are 3,708 tokens. A token can also be punctuation, not just a word.
+Tokenization splits text into smaller parts. For example, “One of the other reviewers” becomes five separate tokens, and punctuation is also counted.
 
 ## Slide 5 — 04 · Processing the reviews: How spaCy produces the results
 
-In this screenshot, we load spaCy’s English model and select the first 20 reviews using `iloc[:20]`. The `nlp.pipe` function processes them in a batch. We then store the token text separately, as well as a tuple containing each token’s text, general part-of-speech label, and detailed tag. The final print statements report the number of reviews and the token count for the first review.
+We selected the first 20 reviews and used spaCy's `nlp.pipe` to process them in a batch. We then stored each token together with its general and detailed POS tags.
 
-## Slide 6 — 05 · Token count results: Tokens in each review
+## Slide 6 — 05 · Token count results: Review length overview
 
-This table lists the token count for every review. Review one has 359 tokens; review ten has only 38, while review thirteen has 461. The index starts at zero, while the review numbers start at one. This makes it easy to compare the lengths without reading every review.
+Across all 20 reviews, spaCy found 3,708 tokens. The shortest review had 38 tokens, while the longest had 461.
 
-## Slide 7 — 06 · Displaying the results: From processed text to tables
+## Slide 7 — 06 · Review lengths: Review lengths vary
 
-This screenshot shows how the results are displayed. First, pandas builds the review-number and token-count table we just saw. Then a loop prints the first 20 tagged tokens for each review. The complete tagged reviews remain stored in `pos_tagged_reviews`; the printed output is only a shorter preview.
+The average review contains 185.4 tokens. This large range shows that the reviews are very different in length.
 
-## Slide 8 — 07 · Review lengths: A quick range check
+## Slide 8 — 07 · Displaying the results: From processed text to tables
 
-On average, a review contains 185.4 tokens. The shortest has 38 and the longest has 461. The range matters because an average alone hides how much the review lengths differ. Longer reviews naturally provide more tokens, which matters when comparing raw counts.
+We used pandas to show the review numbers and token counts. We also printed the first 20 tags for each review, while the complete tagged text stayed stored in the notebook.
 
 ## Slide 9 — 08 · Part-of-speech tagging: Words get grammar labels
 
-PoS means part of speech. For example, spaCy labels “reviewers” as a noun and “mentioned” as a verb. Across all 20 reviews, the output contains 608 nouns, 409 punctuation tokens, and 366 verbs. These counts describe the sample; they do not tell us whether the reviews are positive or negative.
+Part of speech means the grammatical role of a word. For example, spaCy labels “reviewers” as a noun and “mentioned” as a verb.
 
-## Slide 10 — 09 · Example notebook output: What the word tags look like
+## Slide 10 — 09 · POS tag sets: Counting Universal and Penn tags
 
-This screenshot shows the printed output. Each tuple contains the token, its general PoS label, and a more detailed tag. For example, the first tuple labels “One” as NUM and gives it the detailed tag CD. The screenshot is a preview, not the complete tagged text for each review.
+This code counts both Universal and Penn POS tags. Universal tags give broader categories, while Penn tags are more detailed.
+
+## Slide 11 — 10 · POS frequency results: Universal and Penn tag frequencies
+
+Across the 20 reviews, nouns are the most common Universal tag. Under the Penn system, common nouns, determiners, and prepositions are the most frequent tags.
+
+## Slide 12 — 11 · Example notebook output: What the word tags look like
+
+This screenshot shows the printed output.
+Frequency
 
 ## Slide 11 — 10 · What we learned: Useful first step, not the final answer
 
-We converted 20 raw reviews into tokens and grammatical labels, then measured and displayed the results. This prepares text for further analysis, but it does not by itself predict sentiment or fully understand a review. A possible next step is to compare patterns in positive and negative reviews.
+example.
+
+## Slide 12 — 11 · screenshot
+
+NUM (Numeral - one,1,20) and 
+CD (Cardinal number, one, 1) 
+and not ordinal number (1st, 2nd)
+
+## Slide 13 — 12 · 3q
+
+Entity recognition.
